@@ -1,8 +1,6 @@
 import pytest
 
-from fintrust.report import (
-    generate_monthly_report
-)
+from fintrust.report import generate_monthly_report
 
 
 @pytest.mark.integration
