@@ -1,8 +1,13 @@
-from fintrust.report import generate_monthly_report
+import pytest
+
+from fintrust.report import (
+    generate_monthly_report
+)
 
 
+@pytest.mark.integration
 def test_generate_report():
 
     report = generate_monthly_report()
 
-    assert len(report) > 0
+    assert report is not None

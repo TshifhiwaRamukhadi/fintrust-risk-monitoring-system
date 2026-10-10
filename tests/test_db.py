@@ -1,6 +1,9 @@
+import pytest
+
 from fintrust.db import get_connection
 
 
+@pytest.mark.integration
 def test_database_connection():
 
     connection = get_connection()
