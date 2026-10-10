@@ -1,9 +1,14 @@
 import psycopg2
 
 from fintrust.config import Config
+from fintrust.logger import logger
 
 
 def get_connection():
+
+    logger.info(
+        "Opening database connection"
+    )
 
     return psycopg2.connect(
         host=Config.DB_HOST,
@@ -37,6 +42,11 @@ def execute_query(
 
         conn.commit()
 
+        logger.info(
+            f"Query executed successfully. "
+            f"Rows returned: {len(rows)}"
+        )
+
         return rows
 
     except Exception as error:
@@ -44,7 +54,11 @@ def execute_query(
         if conn:
             conn.rollback()
 
-        raise error
+        logger.error(
+            f"Database query failed: {error}"
+        )
+
+        raise
 
     finally:
 
@@ -53,6 +67,10 @@ def execute_query(
 
         if conn:
             conn.close()
+
+        logger.info(
+            "Database connection closed"
+        )
 
 
 def execute_non_query(
@@ -76,6 +94,10 @@ def execute_non_query(
 
         conn.commit()
 
+        logger.info(
+            "Non-query executed successfully"
+        )
+
         return True
 
     except Exception as error:
@@ -83,7 +105,11 @@ def execute_non_query(
         if conn:
             conn.rollback()
 
-        raise error
+        logger.error(
+            f"Database update failed: {error}"
+        )
+
+        raise
 
     finally:
 
@@ -92,3 +118,7 @@ def execute_non_query(
 
         if conn:
             conn.close()
+
+        logger.info(
+            "Database connection closed"
+        )
