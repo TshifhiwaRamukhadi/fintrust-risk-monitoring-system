@@ -1,5 +1,19 @@
-.env
+# Python
 venv/
 __pycache__/
-.pytest_cache/
-coverage/
+*.pyc
+
+# Environment variables
+.env
+
+# Node
+node_modules/
+
+# Vite build
+dist/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store

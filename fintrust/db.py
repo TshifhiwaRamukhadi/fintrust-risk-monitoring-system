@@ -1,3 +1,5 @@
+# fintrust/db.py
+
 import psycopg2
 
 from fintrust.config import Config
@@ -6,17 +8,29 @@ from fintrust.logger import logger
 
 def get_connection():
 
-    logger.info(
-        "Opening database connection"
-    )
+    try:
 
-    return psycopg2.connect(
-        host=Config.DB_HOST,
-        port=Config.DB_PORT,
-        database=Config.DB_NAME,
-        user=Config.DB_USER,
-        password=Config.DB_PASSWORD
-    )
+        connection = psycopg2.connect(
+            host=Config.DB_HOST,
+            port=int(Config.DB_PORT),
+            user=Config.DB_USER,
+            password=Config.DB_PASSWORD,
+            dbname=Config.DB_NAME
+        )
+
+        logger.info(
+            "PostgreSQL connection established."
+        )
+
+        return connection
+
+    except Exception as error:
+
+        logger.error(
+            f"Database connection failed: {error}"
+        )
+
+        raise
 
 
 def execute_query(
@@ -24,14 +38,14 @@ def execute_query(
     params: tuple = None
 ):
 
-    conn = None
+    connection = None
     cursor = None
 
     try:
 
-        conn = get_connection()
+        connection = get_connection()
 
-        cursor = conn.cursor()
+        cursor = connection.cursor()
 
         cursor.execute(
             query,
@@ -40,22 +54,16 @@ def execute_query(
 
         rows = cursor.fetchall()
 
-        conn.commit()
-
         logger.info(
-            f"Query executed successfully. "
-            f"Rows returned: {len(rows)}"
+            f"Query executed successfully. Rows returned: {len(rows)}"
         )
 
         return rows
 
     except Exception as error:
 
-        if conn:
-            conn.rollback()
-
         logger.error(
-            f"Database query failed: {error}"
+            f"Query execution failed: {error}"
         )
 
         raise
@@ -65,12 +73,8 @@ def execute_query(
         if cursor:
             cursor.close()
 
-        if conn:
-            conn.close()
-
-        logger.info(
-            "Database connection closed"
-        )
+        if connection:
+            connection.close()
 
 
 def execute_non_query(
@@ -78,35 +82,35 @@ def execute_non_query(
     params: tuple = None
 ):
 
-    conn = None
+    connection = None
     cursor = None
 
     try:
 
-        conn = get_connection()
+        connection = get_connection()
 
-        cursor = conn.cursor()
+        cursor = connection.cursor()
 
         cursor.execute(
             query,
             params
         )
 
-        conn.commit()
+        connection.commit()
 
         logger.info(
-            "Non-query executed successfully"
+            "Database transaction committed successfully."
         )
 
         return True
 
     except Exception as error:
 
-        if conn:
-            conn.rollback()
+        if connection:
+            connection.rollback()
 
         logger.error(
-            f"Database update failed: {error}"
+            f"Database transaction failed: {error}"
         )
 
         raise
@@ -116,9 +120,5 @@ def execute_non_query(
         if cursor:
             cursor.close()
 
-        if conn:
-            conn.close()
-
-        logger.info(
-            "Database connection closed"
-        )
+        if connection:
+            connection.close()

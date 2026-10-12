@@ -1,5 +1,6 @@
 import boto3
 
+from datetime import datetime
 from fintrust.config import Config
 
 
@@ -23,6 +24,7 @@ def put_event(
     table.put_item(
         Item={
             "account_id": str(account_id),
+            "transaction_timestamp": datetime.utcnow().isoformat(),
             "transaction_id": str(transaction_id),
             "risk_level": risk_level,
             "risk_score": risk_score

@@ -7,15 +7,14 @@ def get_transactions():
 
     query = """
     SELECT
-        transaction_id,
+        id,
         account_id,
         amount,
         transaction_type,
         country,
-        transaction_date,
-        status
-    FROM transactions
-    ORDER BY transaction_date DESC;
+        risk_score
+    FROM risk_scores
+    ORDER BY id DESC;
     """
 
     rows = execute_query(query)
@@ -31,8 +30,7 @@ def get_transactions():
                 "amount": float(row[2]),
                 "transaction_type": row[3],
                 "country": row[4],
-                "transaction_date": str(row[5]),
-                "status": row[6]
+                "risk_score": row[5]
             }
         )
 

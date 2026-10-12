@@ -50,12 +50,10 @@ def process_transaction(
                 account_id,
                 amount,
                 transaction_type,
-                country,
-                status
+                country
             )
             VALUES
             (
-                %s,
                 %s,
                 %s,
                 %s,
@@ -67,41 +65,34 @@ def process_transaction(
                 account_id,
                 amount,
                 transaction_type,
-                country,
-                "QUARANTINED"
-                if risk_result["risk_level"]
-                == "HIGH"
-                else "APPROVED"
+                country
             )
         )
 
         transaction_id = cursor.fetchone()[0]
 
         cursor.execute(
-            """
-            INSERT INTO risk_events
-            (
-                transaction_id,
-                risk_level,
-                risk_score,
-                reason
-            )
-            VALUES
-            (
-                %s,
-                %s,
-                %s,
-                %s
-            )
-            RETURNING risk_event_id
-            """,
-            (
-                transaction_id,
-                risk_result["risk_level"],
-                risk_result["risk_score"],
-                risk_result["reason"]
-            )
+        """
+        INSERT INTO risk_events
+        (
+            transaction_id,
+            risk_level,
+            risk_score
         )
+        VALUES
+        (
+            %s,
+            %s,
+            %s
+        )
+        RETURNING risk_event_id
+        """,
+        (
+            transaction_id,
+            risk_result["risk_level"],
+            risk_result["risk_score"]
+        )
+    )
 
         risk_event_id = cursor.fetchone()[0]
 

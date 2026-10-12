@@ -9,8 +9,10 @@ def generate_monthly_report():
 
     query = """
     SELECT
-        a.account_number,
-        a.customer_name,
+        a.account_id,
+        a.customer_id,
+        a.account_type,
+        a.status,
         t.transaction_id,
         t.amount,
         t.transaction_type,
@@ -33,14 +35,16 @@ def generate_monthly_report():
 
         report.append(
             {
-                "account_number": row[0],
-                "customer_name": row[1],
-                "transaction_id": row[2],
-                "amount": float(row[3]),
-                "transaction_type": row[4],
-                "country": row[5],
-                "risk_level": row[6],
-                "risk_score": row[7]
+                "account_id": row[0],
+                "customer_id": row[1],
+                "account_type": row[2],
+                "status": row[3],
+                "transaction_id": row[4],
+                "amount": float(row[5]),
+                "transaction_type": row[6],
+                "country": row[7],
+                "risk_level": row[8],
+                "risk_score": row[9]
             }
         )
 
