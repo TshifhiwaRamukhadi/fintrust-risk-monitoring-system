@@ -41,7 +41,6 @@ export default function Dashboard() {
         >
           <div className="card-top">
             <span className="card-icon">
-              📊
             </span>
           </div>
 
@@ -67,7 +66,6 @@ export default function Dashboard() {
         >
           <div className="card-top">
             <span className="card-icon">
-              🚨
             </span>
           </div>
 
@@ -93,7 +91,6 @@ export default function Dashboard() {
         >
           <div className="card-top">
             <span className="card-icon">
-              ⚠️
             </span>
           </div>
 

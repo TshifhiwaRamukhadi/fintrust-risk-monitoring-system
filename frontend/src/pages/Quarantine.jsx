@@ -5,12 +5,41 @@ export default function Quarantine() {
   const [transactions, setTransactions] =
     useState([]);
 
+  const [currentPage, setCurrentPage] =
+    useState(1);
+
+  const recordsPerPage = 10;
+
   useEffect(() => {
     fetch("http://127.0.0.1:8000/quarantine")
       .then((response) => response.json())
-      .then((data) => setTransactions(data))
-      .catch((error) => console.error(error));
+      .then((data) => {
+        const sortedTransactions = [
+          ...data,
+        ].sort((a, b) => b.id - a.id);
+
+        setTransactions(sortedTransactions);
+      })
+      .catch((error) =>
+        console.error(error)
+      );
   }, []);
+
+  const totalPages = Math.ceil(
+    transactions.length / recordsPerPage
+  );
+
+  const indexOfLast =
+    currentPage * recordsPerPage;
+
+  const indexOfFirst =
+    indexOfLast - recordsPerPage;
+
+  const currentTransactions =
+    transactions.slice(
+      indexOfFirst,
+      indexOfLast
+    );
 
   return (
     <motion.div
@@ -18,6 +47,17 @@ export default function Quarantine() {
       animate={{ opacity: 1 }}
     >
       <h1>Quarantine Queue</h1>
+
+      <p
+        style={{
+          marginBottom: "20px",
+          fontWeight: "600",
+        }}
+      >
+        Showing {currentTransactions.length} of{" "}
+        {transactions.length} quarantined
+        transactions
+      </p>
 
       <table className="table table-striped">
         <thead>
@@ -27,12 +67,12 @@ export default function Quarantine() {
             <th>Amount</th>
             <th>Country</th>
             <th>Risk Level</th>
-            <th>Action</th>
+            <th>Investigation Status</th>
           </tr>
         </thead>
 
         <tbody>
-          {transactions.map((t) => (
+          {currentTransactions.map((t) => (
             <tr key={t.id}>
               <td>{t.id}</td>
 
@@ -40,7 +80,9 @@ export default function Quarantine() {
 
               <td>
                 R
-                {Number(t.amount).toLocaleString()}
+                {Number(
+                  t.amount
+                ).toLocaleString()}
               </td>
 
               <td>{t.country}</td>
@@ -52,14 +94,61 @@ export default function Quarantine() {
               </td>
 
               <td>
-                <button className="btn btn-warning btn-sm">
-                  Send To Investigation
-                </button>
+                <span
+                  className="badge bg-warning text-dark"
+                  style={{
+                    padding: "8px",
+                    borderRadius: "8px",
+                  }}
+                >
+                  Awaiting Investigation
+                </span>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent:
+            "space-between",
+          alignItems: "center",
+          marginTop: "20px",
+        }}
+      >
+        <button
+          className="btn btn-secondary"
+          disabled={currentPage === 1}
+          onClick={() =>
+            setCurrentPage(
+              currentPage - 1
+            )
+          }
+        >
+          Previous
+        </button>
+
+        <span>
+          Page {currentPage} of{" "}
+          {totalPages}
+        </span>
+
+        <button
+          className="btn btn-secondary"
+          disabled={
+            currentPage === totalPages
+          }
+          onClick={() =>
+            setCurrentPage(
+              currentPage + 1
+            )
+          }
+        >
+          Next
+        </button>
+      </div>
     </motion.div>
   );
 }

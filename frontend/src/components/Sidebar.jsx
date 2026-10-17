@@ -1,41 +1,56 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import logo from "../assets/Fintrust-Logo.png";
+
 
 export default function Sidebar() {
   return (
     <aside className="sidebar">
 
       <div className="sidebar-header">
+
+        <div className="logo">
+        
+                <img
+                    src={logo}
+                    alt="FinTrust-Logo"
+                    className="logo-image"
+                />
+        
+        </div>
+
         <h2 className="brand">
           FinTrust
         </h2>
 
-        <p className="brand-subtitle">
-          Risk Monitoring System
-        </p>
       </div>
 
+
       <nav className="sidebar-nav">
-        <Link to="/">📊 Dashboard</Link>
 
-        <Link to="/transactions">
-          💳 Transactions
-        </Link>
+        <NavLink to="/">
+          <span>Dashboard</span>
+        </NavLink>
 
-        <Link to="/quarantine">
-          🚨 Quarantine
-        </Link>
+        <NavLink to="/transactions">
+          <span>Transactions</span>
+        </NavLink>
 
-        <Link to="/uploads">
-          ☁️ Uploads
-        </Link>
+        <NavLink to="/quarantine">
+          <span>Quarantine</span>
+        </NavLink>
 
-        <Link to="/reports">
-          📈 Reports
-        </Link>
+        <NavLink to="/uploads">
+          <span>Upload Center</span>
+        </NavLink>
 
-        <Link to="/alerts">
-          🔔 Alerts
-        </Link>
+        <NavLink to="/reports">
+          <span>Reports</span>
+        </NavLink>
+
+        <NavLink to="/alerts">
+          <span>Alerts</span>
+        </NavLink>
+
       </nav>
 
     </aside>

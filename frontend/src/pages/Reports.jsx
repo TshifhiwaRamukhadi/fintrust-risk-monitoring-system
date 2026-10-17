@@ -1,10 +1,10 @@
 import { useState } from "react";
 import {
+  ResponsiveContainer,
   PieChart,
   Pie,
   Cell,
   Tooltip,
-  ResponsiveContainer,
   BarChart,
   Bar,
   XAxis,
@@ -31,7 +31,8 @@ export default function Reports() {
         "http://127.0.0.1:8000/transactions"
       );
 
-      const transactions = await transactionsResponse.json();
+      const transactions =
+        await transactionsResponse.json();
 
       const highRisk = transactions.filter(
         (t) => t.risk_score >= 80
@@ -61,12 +62,20 @@ export default function Reports() {
         transactions: count,
       }));
 
+      const topRiskCountries = Object.entries(
+        countryCounts
+      )
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
       setReport({
         ...summary,
+        transactions,
         highRisk,
         mediumRisk,
         lowRisk,
         countryData,
+        topRiskCountries,
       });
     } catch (error) {
       console.error(error);
@@ -82,32 +91,43 @@ export default function Reports() {
   ];
 
   return (
-    <div>
-      <h1>Reports Center</h1>
+    <div className="container-fluid">
 
-      <button
-        className="btn btn-success mb-4"
-        onClick={generateReport}
-      >
-        Generate Monthly Report
-      </button>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+          <h1 className="mb-1">
+            Transaction Risk Report
+          </h1>
+
+          <p className="text-muted">
+            Monthly Compliance & Risk Analysis
+          </p>
+        </div>
+
+        <button
+          className="btn btn-success"
+          onClick={generateReport}
+        >
+          Generate Report
+        </button>
+
+      </div>
 
       {loading && (
         <div className="alert alert-info">
-          <div
-            className="spinner-border spinner-border-sm me-2"
-            role="status"
-          />
-          Generating Report...
-          Analyzing Transactions...
+          Generating report...
         </div>
       )}
 
       {report && (
         <>
+          {/* KPIs */}
+
           <div className="row mb-4">
+
             <div className="col-md-3">
-              <div className="card p-3 text-center">
+              <div className="card shadow-sm border-0 p-3 text-center">
                 <h6>Total Transactions</h6>
                 <h2>
                   {report.total_transactions}
@@ -116,7 +136,7 @@ export default function Reports() {
             </div>
 
             <div className="col-md-3">
-              <div className="card p-3 text-center">
+              <div className="card shadow-sm border-0 p-3 text-center">
                 <h6>High Risk</h6>
                 <h2 className="text-danger">
                   {report.highRisk}
@@ -125,7 +145,7 @@ export default function Reports() {
             </div>
 
             <div className="col-md-3">
-              <div className="card p-3 text-center">
+              <div className="card shadow-sm border-0 p-3 text-center">
                 <h6>Average Risk</h6>
                 <h2 className="text-warning">
                   {report.average_risk_score.toFixed(
@@ -136,7 +156,7 @@ export default function Reports() {
             </div>
 
             <div className="col-md-3">
-              <div className="card p-3 text-center">
+              <div className="card shadow-sm border-0 p-3 text-center">
                 <h6>Total Amount</h6>
                 <h2>
                   R
@@ -144,67 +164,95 @@ export default function Reports() {
                 </h2>
               </div>
             </div>
+
           </div>
 
-          <div className="row">
+          {/* CHARTS */}
 
-            <div className="col-md-6">
-              <div className="card p-3">
-                <h4>Risk Distribution</h4>
+          <div className="row mb-4">
+
+            <div className="col-lg-6">
+
+              <div className="card shadow-sm border-0 p-3">
+
+                <h4>
+                  Risk Distribution
+                </h4>
 
                 <ResponsiveContainer
                   width="100%"
-                  height={300}
+                  height={320}
                 >
+
                   <PieChart>
+
                     <Pie
                       data={[
                         {
                           name: "High Risk",
-                          value: report.highRisk,
+                          value:
+                            report.highRisk,
                         },
                         {
-                          name: "Medium Risk",
-                          value: report.mediumRisk,
+                          name:
+                            "Medium Risk",
+                          value:
+                            report.mediumRisk,
                         },
                         {
                           name: "Low Risk",
-                          value: report.lowRisk,
+                          value:
+                            report.lowRisk,
                         },
                       ]}
                       dataKey="value"
                       outerRadius={100}
                       label
                     >
+
                       {COLORS.map(
-                        (color, index) => (
+                        (
+                          color,
+                          index
+                        ) => (
                           <Cell
                             key={index}
                             fill={color}
                           />
                         )
                       )}
+
                     </Pie>
 
                     <Tooltip />
+
                   </PieChart>
+
                 </ResponsiveContainer>
+
               </div>
+
             </div>
 
-            <div className="col-md-6">
-              <div className="card p-3">
+            <div className="col-lg-6">
+
+              <div className="card shadow-sm border-0 p-3">
+
                 <h4>
                   Transactions by Country
                 </h4>
 
                 <ResponsiveContainer
                   width="100%"
-                  height={300}
+                  height={320}
                 >
+
                   <BarChart
-                    data={report.countryData}
+                    data={
+                      report.countryData
+                    }
                   >
+
                     <CartesianGrid strokeDasharray="3 3" />
 
                     <XAxis
@@ -221,50 +269,154 @@ export default function Reports() {
                       dataKey="transactions"
                       fill="#198754"
                     />
+
                   </BarChart>
+
                 </ResponsiveContainer>
+
               </div>
+
             </div>
 
           </div>
 
-          <div className="card p-4 mt-4">
-            <h3>Report Summary</h3>
+          {/* FINDINGS */}
+
+          <div className="row mb-4">
+
+            <div className="col-md-6">
+
+              <div className="card shadow-sm border-0 p-4 h-100">
+
+                <h4>
+                  Top Risk Countries
+                </h4>
+
+                <table className="table">
+
+                  <thead>
+                    <tr>
+                      <th>Country</th>
+                      <th>Transactions</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+
+                    {report.topRiskCountries.map(
+                      ([country, count]) => (
+                        <tr key={country}>
+                          <td>
+                            {country}
+                          </td>
+                          <td>
+                            {count}
+                          </td>
+                        </tr>
+                      )
+                    )}
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            </div>
+
+            <div className="col-md-6">
+
+              <div className="card shadow-sm border-0 p-4 h-100">
+
+                <h4>
+                  Report Highlights
+                </h4>
+
+                <ul>
+
+                  <li>
+                    {report.highRisk}
+                    {" "}
+                    transactions were
+                    classified as high
+                    risk.
+                  </li>
+
+                  <li>
+                    Total transaction
+                    value analysed:
+                    {" "}
+                    R
+                    {report.total_amount.toLocaleString()}
+                  </li>
+
+                  <li>
+                    Average risk score:
+                    {" "}
+                    {report.average_risk_score.toFixed(
+                      2
+                    )}
+                  </li>
+
+                  <li>
+                    Country analysis
+                    identified key
+                    regions requiring
+                    additional review.
+                  </li>
+
+                  <li>
+                    Generated data can
+                    support compliance
+                    investigations and
+                    reporting.
+                  </li>
+
+                </ul>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* EXECUTIVE SUMMARY */}
+
+          <div className="card shadow-sm border-0 p-4 mb-4">
+
+            <h3>
+              Executive Summary
+            </h3>
 
             <p>
+              This report provides an
+              overview of transaction
+              activity, risk exposure and
+              compliance-related insights.
+            </p>
+
+            <p>
+              Analysis indicates
               <strong>
-                Total Transactions:
-              </strong>{" "}
-              {report.total_transactions}
+                {" "}
+                {report.highRisk}
+              </strong>
+              {" "}
+              high-risk transactions
+              requiring further review.
             </p>
 
             <p>
+              The total transaction value
+              processed during the reporting
+              period was
               <strong>
-                High Risk Transactions:
-              </strong>{" "}
-              {report.highRisk}
+                {" "}
+                R
+                {report.total_amount.toLocaleString()}
+              </strong>.
             </p>
 
-            <p>
-              <strong>
-                Average Risk Score:
-              </strong>{" "}
-              {report.average_risk_score.toFixed(
-                2
-              )}
-            </p>
-
-            <p>
-              <strong>
-                Highest Risk Score:
-              </strong>{" "}
-              {report.highest_risk_score}
-            </p>
-
-            <p>
-              <strong>Total Amount:</strong> R
-              {report.total_amount.toLocaleString()}
-            </p>
           </div>
         </>
       )}

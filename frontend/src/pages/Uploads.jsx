@@ -68,7 +68,7 @@ export default function Uploads() {
           onClick={upload}
           disabled={uploading}
         >
-          {uploading ? "Uploading..." : "Upload To AWS"}
+          {uploading ? "Uploading..." : "Upload"}
         </button>
       </div>
 
@@ -99,7 +99,7 @@ export default function Uploads() {
           animate={{ scale: 1 }}
           className="alert alert-success mt-4"
         >
-          ✅ {successMessage}
+          {successMessage}
         </motion.div>
       )}
 
@@ -109,7 +109,7 @@ export default function Uploads() {
           animate={{ scale: 1 }}
           className="alert alert-danger mt-4"
         >
-          ❌ {errorMessage}
+          {errorMessage}
         </motion.div>
       )}
     </div>
