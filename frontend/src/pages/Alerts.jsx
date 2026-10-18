@@ -17,7 +17,7 @@ export default function Alerts() {
   }, []);
 
   const loadAlerts = () => {
-    fetch("http://127.0.0.1:8000/alerts")
+    fetch("https://fintrust-risk-monitoring-system.onrender.com/alerts")
       .then((response) => response.json())
       .then((data) => {
         const alertData = data

@@ -9,7 +9,7 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/dashboard")
+    fetch("https://fintrust-risk-monitoring-system.onrender.com/dashboard")
       .then((response) => response.json())
       .then((data) => setStats(data))
       .catch((error) => console.error(error));

@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
+const API_URL =
+  "https://fintrust-risk-monitoring-system.onrender.com";
+
 export default function Uploads() {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -22,7 +25,7 @@ export default function Uploads() {
       formData.append("file", file);
 
       const response = await fetch(
-        "http://127.0.0.1:8000/upload-csv",
+        `${API_URL}/upload-csv`,
         {
           method: "POST",
           body: formData,
@@ -42,7 +45,9 @@ export default function Uploads() {
           `${file.name} uploaded successfully.`
       );
     } catch (error) {
-      setErrorMessage(error.message);
+      setErrorMessage(
+        error.message || "Upload failed."
+      );
     } finally {
       setUploading(false);
     }

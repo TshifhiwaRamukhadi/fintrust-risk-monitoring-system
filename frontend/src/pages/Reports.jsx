@@ -21,15 +21,11 @@ export default function Reports() {
     setLoading(true);
 
     try {
-      const summaryResponse = await fetch(
-        "http://127.0.0.1:8000/reports/summary"
-      );
+      const summaryResponse = await fetch("https://fintrust-risk-monitoring-system.onrender.com/reports/summary")
 
       const summary = await summaryResponse.json();
 
-      const transactionsResponse = await fetch(
-        "http://127.0.0.1:8000/transactions"
-      );
+      const transactionsResponse = await fetch("https://fintrust-risk-monitoring-system.onrender.com/transactions")
 
       const transactions =
         await transactionsResponse.json();

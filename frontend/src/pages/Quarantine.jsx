@@ -11,7 +11,7 @@ export default function Quarantine() {
   const recordsPerPage = 10;
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/quarantine")
+    fetch("https://fintrust-risk-monitoring-system.onrender.com/quarantine")
       .then((response) => response.json())
       .then((data) => {
         const sortedTransactions = [
