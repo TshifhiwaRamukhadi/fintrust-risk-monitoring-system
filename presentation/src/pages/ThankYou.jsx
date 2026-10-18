@@ -5,7 +5,7 @@ export default function ThankYou() {
     <div className="slide">
 
       <div className="slide-number">
-        Slide 16 of 16
+        Slide 15 of 15
       </div>
 
       <h1>

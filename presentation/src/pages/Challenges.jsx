@@ -5,7 +5,7 @@ export default function Challenges() {
     <div className="slide">
 
       <div className="slide-number">
-        Slide 11 of 16
+        Slide 10 of 15
       </div>
 
       <h1>
