@@ -5,7 +5,7 @@ export default function Questions() {
     <div className="slide">
 
       <div className="slide-number">
-        Slide 15 of 16
+        Slide 14 of 15
       </div>
 
       <h1>
