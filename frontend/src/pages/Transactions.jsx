@@ -8,7 +8,7 @@ export default function Transactions() {
   const recordsPerPage = 10;
 
   useEffect(() => {
-    fetch("https://fintrust-risk-monitoring-system.onrender.com/transactions")
+    fetch("http://127.0.0.1:8000/transactions")
       .then((response) => response.json())
       .then((data) => {
         const sortedTransactions = [...data].sort(

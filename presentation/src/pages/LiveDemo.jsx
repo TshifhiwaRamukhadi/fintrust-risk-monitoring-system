@@ -5,7 +5,7 @@ export default function LiveDemo() {
     <div className="slide">
 
       <div className="slide-number">
-        Slide 9 of 15
+        Slide 10 of 16
       </div>
 
       <h1>
